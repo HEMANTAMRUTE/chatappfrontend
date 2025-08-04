@@ -4,12 +4,19 @@ import ChatInput from "./ChatInput";
 import Logout from "./Logout";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { sendMessageRoute, recieveMessageRoute } from "../utils/APIRoutes";
 
 export default function ChatContainer({ currentChat, socket }) {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  useEffect(() => {
+      const user = localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY);
+      if (!user) navigate("/login");
+    }, [navigate]);
 
  useEffect(() => {
   const fetchMessages = async () => {
