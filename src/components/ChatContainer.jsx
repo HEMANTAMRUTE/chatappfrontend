@@ -11,7 +11,8 @@ export default function ChatContainer({ currentChat, socket }) {
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
-  useEffect(async () => {
+ useEffect(() => {
+  const fetchMessages = async () => {
     const data = await JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     );
@@ -20,7 +21,12 @@ export default function ChatContainer({ currentChat, socket }) {
       to: currentChat._id,
     });
     setMessages(response.data);
-  }, [currentChat]);
+  };
+
+  if (currentChat) {
+    fetchMessages();
+  }
+}, [currentChat]);
 
   useEffect(() => {
     const getCurrentChat = async () => {
@@ -42,6 +48,7 @@ export default function ChatContainer({ currentChat, socket }) {
       from: data._id,
       msg,
     });
+
     await axios.post(sendMessageRoute, {
       from: data._id,
       to: currentChat._id,
